@@ -1,10 +1,22 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import NotesCard from "./components/notes-card.vue"
 
 const showModal = ref(false);
 const newNoteText = ref("");
+
+const getRandomColor = () => {
+  const color = `hsl(${Math.random() * 360}, 100%, 75%)`;
+
+  return color;
+};
+
 const errorMessage = ref("");
-const notes = ref<any[]>([]);
+const notes = ref<any[]>([{
+  id: Math.floor(Math.random() * 10000),
+  description: 'adsasdadasd',
+  backgroundColor: getRandomColor(),
+}]);
 
 const addNewNote = () => {
   if(newNoteText.value.length <= 10) {
@@ -17,18 +29,11 @@ const addNewNote = () => {
   notes.value.push({
     id: Math.floor(Math.random() * 10000),
     description: newNoteText.value,
-    date: new Date().toLocaleString(),
     backgroundColor: getRandomColor(),
   });
 
   showModal.value = false;
   newNoteText.value = '';
-};
-
-const getRandomColor = () => {
-  const color = `hsl(${Math.random() * 360}, 100%, 75%)`;
-
-  return color;
 };
 </script>
 
@@ -58,15 +63,13 @@ const getRandomColor = () => {
       </header>
 
       <div class="cards-container">
-        <div
+        <NotesCard
           v-for="note in notes"
           :key="note.id"
-          class="card"
           :style="{'background-color': note.backgroundColor}"
         >
           <p class="main-text">{{ note.description }}</p>
-          <p class="date">{{ note.date }}</p>
-        </div>
+        </NotesCard>
       </div>
     </div>
   </main>
@@ -98,20 +101,6 @@ h1 {
   background-color: black;
   color: white;
   border-radius: 100%;
-}
-
-.card {
-  width: 225px;
-  min-height: 225px;
-  background-color: rgb(237, 182, 44);
-  padding: 10px;
-  border-radius: 15px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow-wrap: break-word;
 }
 
 .cards-container {
